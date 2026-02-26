@@ -1,228 +1,88 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { ArrowRight, LogOut, Menu, Sparkles, X } from "lucide-react";
 
 import Signup from "./Signup";
 import Login from "./Login";
+import Meals from "./Meals";
 import Dashboard from "./Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 
 /* -------------------- HOME -------------------- */
 
 function Home() {
-  return (
-    <div
-      className="relative h-screen flex items-center justify-center text-white"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
-
-      <div className="relative text-center max-w-2xl px-6">
-        <h1 className="text-6xl font-extrabold mb-6 leading-tight">
-          Delicious Meals <br />
-          Delivered Daily 🍱
-        </h1>
-
-        <p className="text-lg mb-8 text-gray-200">
-          Fresh, hygienic and home-style food delivered to your doorstep.
-        </p>
-
-        <Link
-          to="/meals"
-          className="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-full text-lg font-semibold transition transform hover:scale-105 shadow-lg"
-        >
-          Explore Meal Plans
-        </Link>
-      </div>
-    </div>
+  const features = useMemo(
+    () => [
+      { title: "Home-style", subtitle: "Fresh, hygienic meals daily" },
+      { title: "Flexible", subtitle: "Skip meals anytime" },
+      { title: "Reliable", subtitle: "On-time delivery" },
+    ],
+    []
   );
-}
 
-/* -------------------- ABOUT -------------------- */
-
-function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-red-100">
-
-      {/* Hero Section */}
-      <div className="relative h-[300px] flex items-center justify-center text-white"
+    <div className="relative overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1498837167922-ddd27525d352')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+            "url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=2400&q=80')",
         }}
-      >
-        <div className="absolute inset-0 bg-black/60"></div>
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-white/0" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/25 to-black/0" />
 
-        <h1 className="relative text-4xl md:text-5xl font-bold">
-          About Tiffin Service 🍱
-        </h1>
-      </div>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20">
+        <div className="max-w-2xl text-white">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs sm:text-sm backdrop-blur">
+            <Sparkles className="h-4 w-4 text-white/90" />
+            Premium tiffin experience, Home-style meals, delivered fresh
+          </div>
 
-      {/* Content Section */}
-      <div className="max-w-6xl mx-auto px-6 py-16">
+          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-tight">
+            Delicious meals,
+            <span className="block text-white/90">delivered like clockwork</span>
+          </h1>
 
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
-          <p className="text-gray-600 max-w-3xl mx-auto">
-            At Tiffin Service, we aim to deliver fresh, hygienic, and home-style
-            meals to students and working professionals. Our goal is to make
-            healthy food affordable and accessible without compromising quality.
+          <p className="mt-5 text-base sm:text-lg text-white/80 leading-relaxed">
+            Modern, food-first subscriptions with clean billing, beautiful cards,
+            and a smooth ordering flow.
           </p>
-        </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-
-          <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-xl font-semibold mb-3">🥗 Fresh Ingredients</h3>
-            <p className="text-gray-600">
-              We use high-quality, fresh ingredients sourced daily to ensure
-              nutritious and delicious meals.
-            </p>
-          </div>
-
-          <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-xl font-semibold mb-3">🚚 Fast Delivery</h3>
-            <p className="text-gray-600">
-              Timely delivery ensures your meals arrive hot and fresh at your
-              doorstep every single day.
-            </p>
-          </div>
-
-          <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-xl font-semibold mb-3">💰 Affordable Plans</h3>
-            <p className="text-gray-600">
-              Our subscription plans are designed for students and professionals
-              who want quality food at reasonable prices.
-            </p>
-          </div>
-
-        </div>
-
-        {/* Closing Section */}
-        <div className="text-center mt-20">
-          <h2 className="text-2xl font-bold mb-4">
-            Made with ❤️ for Food Lovers
-          </h2>
-          <p className="text-gray-600">
-            Join hundreds of happy customers who trust Tiffin Service
-            for their daily meals.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
-/* -------------------- MEALS -------------------- */
-
-function Meals() {
-  const [plans, setPlans] = useState([]);
-
-  // Stable high-quality food images
-  const foodImages = [
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
-    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
-    "https://images.unsplash.com/photo-1553621042-f6e147245754",
-    "https://images.unsplash.com/photo-1505253758473-96b7015fcd40",
-    "https://images.unsplash.com/photo-1529042410759-befb1204b468",
-    "https://images.unsplash.com/photo-1543352634-8737b4c7e0cb",
-    "https://images.unsplash.com/photo-1504674900247-ec6c6f1a6c7d",
-    "https://images.unsplash.com/photo-1478147427282-58a87a120781",
-  ];
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/meals/plans/")
-      .then((res) => {
-        setPlans(res.data.results || res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const subscribe = (id) => {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      alert("Login first!");
-      return;
-    }
-
-    axios
-      .post(
-        "http://127.0.0.1:8000/api/subscriptions/create/",
-        {
-          meal_plan: id,
-          start_date: new Date().toISOString().split("T")[0],
-          status: "active",
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(() => alert("Subscribed!"))
-      .catch(() => alert("Subscription failed"));
-  };
-
-  return (
-    <div className="min-h-screen py-16 px-6 bg-gradient-to-b from-red-50 via-white to-red-100">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold mb-12 text-center">
-          Our Meal Plans 🍽
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((p, index) => (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/meals"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm sm:text-base font-medium text-primary-foreground shadow-lg shadow-black/10 hover:shadow-xl transition"
             >
-              <div className="h-56 overflow-hidden">
-                <img
-                  src={`${foodImages[index % foodImages.length]}?auto=format&fit=crop&w=600&q=80`}
-                  alt={p.name}
-                  onError={(e) => {
-                    e.target.src =
-                      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80";
-                  }}
-                  className="w-full h-full object-cover hover:scale-110 transition duration-500"
-                />
+              Explore meal plans
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center justify-center rounded-xl bg-white/10 px-6 py-3 text-sm sm:text-base font-medium text-white ring-1 ring-white/25 backdrop-blur hover:bg-white/15 transition"
+            >
+              View dashboard
+            </Link>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur"
+              >
+                <div className="text-base font-semibold">{f.title}</div>
+                <div className="mt-1 text-sm text-white/75">{f.subtitle}</div>
               </div>
-
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
-
-                <p className="text-gray-500 mb-3 capitalize">
-                  {p.plan_type} Plan
-                </p>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-red-600">
-                    ₹{p.price_per_day} / day
-                  </span>
-
-                  <button
-                    onClick={() => subscribe(p.id)}
-                    className="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition"
-                  >
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -231,69 +91,152 @@ function Meals() {
 
 /* -------------------- APP -------------------- */
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !!localStorage.getItem("access")
-  );
+function AppShell() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const token = localStorage.getItem("access");
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("access"));
-    };
+    setMobileOpen(false);
+  }, [location.pathname]);
 
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    navigate("/", { replace: true });
+  };
 
   return (
-    <BrowserRouter>
-      <nav className="bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen">
+      <nav className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
           <Link
             to="/"
-            className="text-2xl font-bold text-red-600 hover:scale-105 transition"
+            className="inline-flex items-center gap-2 text-lg font-semibold tracking-tight"
           >
-            Tiffin🍱
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              🍱
+            </span>
+            Tiffin
           </Link>
 
-          <div className="flex items-center gap-6 font-medium">
-            <Link to="/" className="hover:text-red-600 transition">
+          <div className="hidden md:flex items-center gap-2">
+            <Link
+              to="/"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+            >
               Home
             </Link>
-            <Link to="/about" className="hover:text-red-600 transition">
-              About
-            </Link>
-            <Link to="/meals" className="hover:text-red-600 transition">
+            <Link
+              to="/meals"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+            >
               Meal Plans
             </Link>
 
-            {!isLoggedIn && (
-                      <>
-                        <Link to="/login" className="hover:text-red-600 transition">
-                          Login
-                        </Link>
+            <div className="ml-2 flex items-center gap-2">
+              {!token ? (
+                <>
+                  <Link
+                    to="/login"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:shadow transition"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 transition"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
 
-                        <Link to="/signup" className="hover:text-red-600 transition">
-                          Sign Up
-                        </Link>
-                      </>
-                    )}
-
-            {isLoggedIn && (
-              <Link to="/dashboard" className="hover:text-red-600 transition">
-                Dashboard
-              </Link>
-            )}
+          <button
+            type="button"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm hover:bg-slate-50 transition"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="md:hidden border-t border-black/5 bg-white/90 backdrop-blur">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 py-3 flex flex-col gap-2">
+              <Link
+                to="/"
+                className="rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+              >
+                Home
+              </Link>
+              <Link
+                to="/meals"
+                className="rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition"
+              >
+                Meal Plans
+              </Link>
+
+              {!token ? (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <Link
+                    to="/login"
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition text-center"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="rounded-xl bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:shadow transition text-center"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <Link
+                    to="/dashboard"
+                    className="rounded-xl bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 transition text-center"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/meals" element={<Meals />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -306,6 +249,14 @@ function App() {
           }
         />
       </Routes>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   );
 }

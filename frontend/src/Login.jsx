@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { Loader2, Sparkles, UtensilsCrossed } from "lucide-react";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -9,6 +10,12 @@ function Login() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const token = localStorage.getItem("access");
+
+  if (token) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -28,11 +35,10 @@ function Login() {
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
 
-      // Trigger navbar refresh
-      window.dispatchEvent(new Event("storage"));
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
 
-      navigate("/dashboard");
-    } catch (err) {
+    } catch {
       setError("Invalid username or password");
     } finally {
       setLoading(false);
@@ -40,62 +46,94 @@ function Login() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1495195134817-aeb325a55b65')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=2400&q=80')",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/40" />
 
-      <div className="relative bg-white/90 backdrop-blur-md p-10 rounded-2xl shadow-2xl w-96">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Welcome Back 👋
-        </h2>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="text-white max-w-xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs sm:text-sm backdrop-blur">
+              <Sparkles className="h-4 w-4" />
+              Food-first, Zomato-inspired UI
+            </div>
+            <h1 className="mt-5 text-3xl sm:text-4xl font-semibold tracking-tight">
+              Welcome back
+            </h1>
+            <p className="mt-3 text-sm sm:text-base text-white/80 leading-relaxed">
+              Log in to manage subscriptions, skip meals, and track billing.
+            </p>
+          </div>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-4 text-center">
-            {error}
-          </p>
-        )}
+          <div className="w-full">
+            <div className="rounded-3xl border border-white/15 bg-white/95 p-6 sm:p-8 shadow-2xl shadow-black/20 backdrop-blur">
+              <div className="flex items-center gap-2 text-slate-900">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  <UtensilsCrossed className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-lg font-semibold tracking-tight">
+                    Login
+                  </div>
+                  <div className="text-sm text-slate-600">
+                    Access your dashboard.
+                  </div>
+                </div>
+              </div>
 
-        <input
-          className="border p-3 w-full mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+              {error && (
+                <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
 
-        <input
-          type="password"
-          className="border p-3 w-full mb-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+              <div className="mt-5 space-y-3">
+                <input
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
 
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="bg-red-600 text-white w-full py-3 rounded-lg hover:bg-red-700 transition font-semibold"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+                <input
+                  type="password"
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-        {/* Sign Up Section */}
-        <p className="text-center mt-6 text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <Link
-            to="/signup"
-            className="text-red-600 font-semibold hover:underline"
-          >
-            Sign Up
-          </Link>
-        </p>
+              <button
+                onClick={handleLogin}
+                disabled={loading}
+                className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary px-5 text-sm font-medium text-primary-foreground shadow-sm hover:shadow transition disabled:opacity-70"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Logging in…
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </button>
+
+              <p className="mt-5 text-center text-sm text-slate-600">
+                Don’t have an account?{" "}
+                <Link to="/signup" className="font-semibold text-primary">
+                  Sign up
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
